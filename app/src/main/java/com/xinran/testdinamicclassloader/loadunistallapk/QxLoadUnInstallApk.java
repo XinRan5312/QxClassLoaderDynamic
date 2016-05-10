@@ -12,8 +12,12 @@ import android.os.Environment;
 
 import com.xinran.testdinamicclassloader.R;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -160,4 +164,37 @@ public class QxLoadUnInstallApk {
 
 
     }
+
+    /**
+     * //拷贝apk文件至sd卡plugin目录下保证指定路径下有插件资源，模拟从网络下载后保存到sd卡后的情景
+     * @param apkName
+     */
+
+    public void copyApkFileToSD(String apkName) {
+        File file = new File(getApkDir());
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        File apk = new File(getApkDir() + File.separator + apkName);
+        try {
+            if(apk.exists()){
+                return;
+            }
+            FileOutputStream fos = new FileOutputStream(apk);
+            InputStream is = mContext.getResources().getAssets().open(apkName);
+            BufferedInputStream bis = new BufferedInputStream(is);
+            int len = -1;
+            byte[] by = new byte[1024];
+            while ((len = bis.read(by)) != -1) {
+                fos.write(by, 0, len);
+                fos.flush();
+            }
+            fos.close();
+            is.close();
+            bis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -74,4 +74,5 @@ public class QxLoadInstallApk {
         int resourceId = field.getInt(R.mipmap.class);
         return apkContext.getResources().getDrawable(resourceId);//获取插件apk的Resource 然后才能操作它的资源
     }
+
 }
