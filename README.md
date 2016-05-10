@@ -1,5 +1,11 @@
 # QxClassLoaderDynamic
 通过java类加载机制的研究，更深入研究Andriod插件化的发展
+      //通过使用apk自己的类加载器，反射出R类中相应的内部类进而获取我们需要的资源id
+        /**
+         * R类的内部类有好多，常见的对应资源都是独立的R的内部类，而且类名都是小写
+         * 大家可以进入APP的R类查看，比如mipmap boole integer drawable layout menu demin color string stytle等
+         */
+        Class<?> clazz = Class.forName(packageName + ".R$mipmap", true, pathClassLoader);
 一切为了插件化的研究
 1、什么是动态加载技术？
 动态加载技术就是使用类加载器加载相应的apk、dex、jar（必须含有dex文件），再通过反射获得该apk、dex、jar内部的资源（class、图片、color等等）进而供宿主app使用。
