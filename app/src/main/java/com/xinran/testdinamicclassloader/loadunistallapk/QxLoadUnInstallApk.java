@@ -33,6 +33,10 @@ import dalvik.system.DexClassLoader;
  * package="com.xinran.testdinamicclassloader"
  * android:sharedUserId="com.wr.qx">
  *
+ * 设计思路：
+ 通过PackageManager在指定的放插件apk的路径下得到所有插件信息（Package Appicationinfo等），
+ 然后使用自定义的DexClassLoader进行加载插件，还要在host的Resourse的基础创建包含插件res的新的Resource，
+ 以便使用插件res
  * Created by qixinh on 16/5/10.
  */
 public class QxLoadUnInstallApk {
@@ -120,7 +124,8 @@ public class QxLoadUnInstallApk {
     private HashMap<String, String> getOneUnIstallApkInfo(String name) {
         HashMap<String, String> fileInfo = new HashMap<>();
         PackageManager pm = mContext.getPackageManager();
-        PackageInfo packageInfo = pm.getPackageArchiveInfo(getApkDir() + File.separator + name, PackageManager.GET_ACTIVITIES);
+        PackageInfo packageInfo = pm.getPackageArchiveInfo(getApkDir() + File.separator + name,
+                PackageManager.GET_ACTIVITIES);
         if (packageInfo != null) {
             ApplicationInfo appinfo = packageInfo.applicationInfo;
             String viersion = packageInfo.versionName;
@@ -147,8 +152,8 @@ public class QxLoadUnInstallApk {
      */
     public Drawable dynamicLoadApk(String apkName, String apkPackageName) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         File optimizeDirFile = mContext.getDir("dex", Context.MODE_PRIVATE);//解压优化后插件apk存放地点
-        DexClassLoader dexClassLoader = new DexClassLoader(getApkDir() + File.separator + apkName, optimizeDirFile.getPath(),
-                null, ClassLoader.getSystemClassLoader());
+        DexClassLoader dexClassLoader = new DexClassLoader(getApkDir() + File.separator + apkName,
+                optimizeDirFile.getPath(), null, ClassLoader.getSystemClassLoader());
         //通过使用apk自己的类加载器，反射出R类中相应的内部类进而获取我们需要的资源id
         /**
          * R类的内部类有好多，常见的对应资源都是独立的R的内部类，而且类名都是小写

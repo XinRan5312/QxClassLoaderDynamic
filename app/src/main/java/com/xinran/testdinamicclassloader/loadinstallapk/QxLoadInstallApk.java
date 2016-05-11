@@ -19,8 +19,10 @@ import dalvik.system.PathClassLoader;
  * <manifest xmlns:android="http://schemas.android.com/apk/res/android"
  package="com.xinran.testdinamicclassloader"
  android:sharedUserId="com.wr.qx">
-
-
+设计思路：
+    通过PackageManager获得所有已经安装的apk插件，然后根据sharedUserId过滤出我们开发的插件，然后获得相应的Package等信息，
+ 然后使用自定义的pathClassLoader进行加载插件，还要在host的Resourse的基础创建包含插件res的新的Resource，
+ 以便使用插件res
  * Created by qixinh on 16/5/10.
  */
 public class QxLoadInstallApk {
@@ -40,7 +42,7 @@ public class QxLoadInstallApk {
         }
     }
 
-    public ArrayList<QxApkBean> findAllApks() {
+    public ArrayList<QxApkBean> findAllInstallApks() {
         ArrayList<QxApkBean> list = new ArrayList<>();
         PackageManager pm = mContext.getPackageManager();
         List<PackageInfo> packageInfos = pm.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
@@ -49,7 +51,8 @@ public class QxLoadInstallApk {
                 if (pi.sharedUserId != null && pi.sharedUserId.equals(SHARE_USER_ID) &&
                         pi.packageName.equals(mContext.getPackageName())) {
 
-                    QxApkBean apk = new QxApkBean(pm.getApplicationLabel(pi.applicationInfo).toString(), pi.packageName);
+                    QxApkBean apk = new QxApkBean(pm.getApplicationLabel(pi.applicationInfo).toString(),
+                            pi.packageName);
 
                     list.add(apk);
                 }
