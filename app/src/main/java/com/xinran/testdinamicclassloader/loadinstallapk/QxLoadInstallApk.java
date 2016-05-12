@@ -45,6 +45,12 @@ public class QxLoadInstallApk {
     public ArrayList<QxApkBean> findAllInstallApks() {
         ArrayList<QxApkBean> list = new ArrayList<>();
         PackageManager pm = mContext.getPackageManager();
+        /**
+         *  PackageManager.GET_UNINSTALLED_PACKAGES:
+         * Flag parameter to retrieve some information about all applications (even
+         * uninstalled ones) which have data directories.
+         *
+         */
         List<PackageInfo> packageInfos = pm.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
         if (packageInfos != null && !packageInfos.isEmpty()) {
             for (PackageInfo pi : packageInfos) {
