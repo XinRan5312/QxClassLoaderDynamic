@@ -1,1 +1,1 @@
-include ':app', ':dynamicloadapk'
+include ':app', ':DroidPlugin'
